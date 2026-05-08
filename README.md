@@ -36,6 +36,12 @@ The files are edited in place, so no separate output folder is created.
 
 ### Install Dependencies
 
+Arch Linux:
+
+```bash
+sudo pacman -S --needed oxipng jpegoptim coreutils findutils gawk
+```
+
 Debian/Ubuntu:
 
 ```bash
@@ -47,12 +53,6 @@ Fedora:
 
 ```bash
 sudo dnf install -y oxipng jpegoptim coreutils findutils gawk
-```
-
-Arch Linux:
-
-```bash
-sudo pacman -S --needed oxipng jpegoptim coreutils findutils gawk
 ```
 
 ## Usage
@@ -119,8 +119,8 @@ No files processed
 Contributions are welcome.
 
 Please:
-- keep pull requests focused and consistent with the existing style.
-- update documentation when behaviour changes.
+- keep the pull requests focused and consistent with the existing style.
+- update the documentation when the behaviour changes.
 
 ## License
 
