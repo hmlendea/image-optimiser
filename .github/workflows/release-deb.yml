@@ -1,0 +1,74 @@
+name: Release Debian Package
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload-deb:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare package metadata
+        id: metadata
+        run: |
+          set -euo pipefail
+
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          VERSION="${TAG_NAME#v}"
+
+          if [[ -z "${VERSION}" ]]; then
+            echo "Failed to derive package version from release tag: ${TAG_NAME}" >&2
+            exit 1
+          fi
+
+          echo "PACKAGE_NAME=image-optimiser" >> "$GITHUB_ENV"
+          echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
+          echo "ITERATION=1" >> "$GITHUB_ENV"
+          echo "ARCH=all" >> "$GITHUB_ENV"
+          echo "DEB_FILENAME=image-optimiser_${VERSION}.deb" >> "$GITHUB_ENV"
+          echo "deb_filename=image-optimiser_${VERSION}.deb" >> "$GITHUB_OUTPUT"
+
+      - name: Build deb package
+        run: |
+          set -euo pipefail
+
+          PKG_ROOT="${{ github.workspace }}/pkg"
+          PKG_DIR="${PKG_ROOT}/${PACKAGE_NAME}_${VERSION}-${ITERATION}_${ARCH}"
+
+          rm -rf "${PKG_ROOT}"
+          mkdir -p "${PKG_DIR}/DEBIAN"
+          mkdir -p "${PKG_DIR}/usr/bin"
+          mkdir -p "${PKG_DIR}/usr/share/doc/${PACKAGE_NAME}"
+
+          printf '%s\n' \
+            "Package: ${PACKAGE_NAME}" \
+            "Version: ${VERSION}-${ITERATION}" \
+            "Section: utils" \
+            "Priority: optional" \
+            "Architecture: ${ARCH}" \
+            "Maintainer: Image Optimiser Maintainers <maintainers@example.com>" \
+            "Depends: bash, coreutils, findutils, gawk, oxipng, jpegoptim" \
+            "Description: Lossless CLI image optimiser for PNG and JPEG files" \
+            " This package provides a command-line tool that recursively scans" \
+            " directories and losslessly optimises PNG and JPEG images in place." \
+            > "${PKG_DIR}/DEBIAN/control"
+
+          install -m 0755 "optimise-image.sh" "${PKG_DIR}/usr/bin/image-optimiser"
+          install -m 0644 "README.md" "${PKG_DIR}/usr/share/doc/${PACKAGE_NAME}/README.md"
+          install -m 0644 "LICENSE" "${PKG_DIR}/usr/share/doc/${PACKAGE_NAME}/copyright"
+
+          dpkg-deb --build --root-owner-group "${PKG_DIR}" "${DEB_FILENAME}"
+          ls -lh "${DEB_FILENAME}"
+
+      - name: Upload deb to release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.metadata.outputs.deb_filename }}
+          overwrite_files: true
