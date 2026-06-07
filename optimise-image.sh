@@ -27,7 +27,7 @@ for INPUT_PATH in "${@}"; do
             if command -v oxipng &>/dev/null; then
                 oxipng -o max --preserve --alpha "${IMAGE_PATH}"
             else
-                zopflipng -m "${IMAGE_PATH}" "${IMAGE_PATH}"
+                zopflipng -y -m "${IMAGE_PATH}" "${IMAGE_PATH}"
             fi
         elif [[ "${IMAGE_EXTENSION}" == "jpg" ]] \
           || [[ "${IMAGE_EXTENSION}" == "jpeg" ]]; then
