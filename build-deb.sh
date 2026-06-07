@@ -9,7 +9,7 @@ if [[ -z "${VERSION}" ]]; then
     exit 1
 fi
 
-PACKAGE_NAME="optimise-image"
+PACKAGE_NAME="image-optimiser"
 ARCH="all"
 BUILD_DIR="$(mktemp -d)"
 DEB_ROOT="${BUILD_DIR}/${PACKAGE_NAME}_${VERSION}_${ARCH}"
@@ -20,8 +20,8 @@ mkdir -p "${DEB_ROOT}/DEBIAN"
 mkdir -p "${DEB_ROOT}/usr/share/metainfo"
 
 # Copy script
-cp src/optimise-image.sh "${DEB_ROOT}/usr/local/bin/optimise-image"
-chmod 755 "${DEB_ROOT}/usr/local/bin/optimise-image"
+cp src/optimise-image.sh "${DEB_ROOT}/usr/local/bin/${PACKAGE_NAME}"
+chmod 755 "${DEB_ROOT}/usr/local/bin/${PACKAGE_NAME}"
 
 # Write AppStream metainfo (read by GNOME Software for license, description, etc.)
 cat > "${DEB_ROOT}/usr/share/metainfo/io.github.hmlendea.${PACKAGE_NAME}.metainfo.xml" <<EOF
@@ -34,7 +34,7 @@ cat > "${DEB_ROOT}/usr/share/metainfo/io.github.hmlendea.${PACKAGE_NAME}.metainf
   <summary>Lossless image optimiser for PNG, JPG, and JPEG files</summary>
   <description>
     <p>
-      A shell utility that losslessly compresses image files in place. It recursively scans one or more paths, optimises supported files using oxipng (PNG) and jpegoptim (JPG/JPEG), and reports per-file and total size reduction.
+      A shell utility that losslessly compresses image files in place. It recursively scans one or more paths, optimises supported files using oxipng or zopflipng (PNG) and jpegoptim (JPG/JPEG), and reports per-file and total size reduction.
     </p>
   </description>
   <url type="homepage">https://github.com/hmlendea/image-optimiser</url>
@@ -48,12 +48,12 @@ Version: ${VERSION}
 Section: utils
 Priority: optional
 Architecture: ${ARCH}
-Depends: oxipng, jpegoptim
+Depends: zopfli, jpegoptim
 Maintainer: hmlendea <https://github.com/hmlendea>
 Homepage: https://github.com/hmlendea/image-optimiser
 License: GPL-3.0
 Description: Lossless image optimiser for PNG, JPG, and JPEG files.
- A shell utility that losslessly compresses image files in place. It recursively scans one or more paths, optimises supported files using oxipng (PNG) and jpegoptim (JPG/JPEG), and reports per-file and total size reduction.
+ A shell utility that losslessly compresses image files in place. It recursively scans one or more paths, optimises supported files using oxipng or zopflipng (PNG) and jpegoptim (JPG/JPEG), and reports per-file and total size reduction.
 EOF
 
 # Build the .deb
