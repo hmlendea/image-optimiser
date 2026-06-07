@@ -20,7 +20,7 @@ mkdir -p "${DEB_ROOT}/DEBIAN"
 mkdir -p "${DEB_ROOT}/usr/share/metainfo"
 
 # Copy script
-cp optimise-image.sh "${DEB_ROOT}/usr/local/bin/optimise-image"
+cp src/optimise-image.sh "${DEB_ROOT}/usr/local/bin/optimise-image"
 chmod 755 "${DEB_ROOT}/usr/local/bin/optimise-image"
 
 # Write AppStream metainfo (read by GNOME Software for license, description, etc.)
