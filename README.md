@@ -99,6 +99,10 @@ Size: 1.7M -> 1.4M
 - Non-existent paths are skipped with an error message.
 - Compression is lossless, but always keep backups for critical assets.
 
+## Security
+
+See [SECURITY.md](SECURITY.md) for the security policy, supported versions, vulnerability reporting, and disclosure guidelines.
+
 ## Troubleshooting
 
 `oxipng: command not found` or `jpegoptim: command not found`
