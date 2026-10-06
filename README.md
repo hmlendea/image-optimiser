@@ -288,6 +288,10 @@ When doing so, please:
 - Properly test all modifications, including edge cases and error conditions
 - Raise a new [issue](https://github.com/hmlendea/image-optimiser/issues) for problems or suggestions
 
+## 🛡️ Privacy
+
+For the detailed description of how the application handles privacy and personal data, see [PRIVACY.md](PRIVACY.md).
+
 ## 🔒 Security
 
 For information on reporting security vulnerabilities, see [SECURITY.md](SECURITY.md).
